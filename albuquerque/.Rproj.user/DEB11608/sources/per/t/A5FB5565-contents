@@ -1,0 +1,27 @@
+data(jenks71)
+pal1 <- c("wheat1", "red3")
+opar <- par(mfrow=c(2,3))
+plot(classIntervals(grid_sp@data$population, n=5, style="fixed",
+                    fixedBreaks=c(25, 50, 100, 200, 400)), pal=pal1, main="Fixed")
+plot(classIntervals(grid_sp@data$population, n=5, style="sd"), pal=pal1, main="Pretty standard deviations")
+plot(classIntervals(grid_sp@data$population, n=5, style="equal"), pal=pal1, main="Equal intervals")
+plot(classIntervals(grid_sp@data$population, n=5, style="quantile"), pal=pal1, main="Quantile")
+set.seed(1)
+plot(classIntervals(grid_sp@data$population, n=5, style="kmeans"), pal=pal1, main="K-means")
+plot(classIntervals(grid_sp@data$population, n=5, style="hclust", method="complete"),
+     pal=pal1, main="Complete cluster")
+plot(classIntervals(grid_sp@data$population, n=5, style="hclust", method="single"),
+     pal=pal1, main="Single cluster")
+set.seed(1)
+plot(classIntervals(grid_sp@data$population, n=5, style="bclust", verbose=FALSE),
+     pal=pal1, main="Bagged cluster")
+plot(classIntervals(grid_sp$population, n=5, style="fisher"), pal=pal1, main="Fisher's method")
+plot(classIntervals(grid_sp$population, n=5, style="jenks"), pal=pal1, main="Jenks' method")
+par(opar)
+classIntervals(grid_sp@data$population, n=5, style="fixed", fixedBreaks=c(15.57, 25, 50, 75, 100, 155.30))
+classIntervals(grid_sp@data$population, n=5, style="sd")
+classIntervals(grid_sp@data$population, n=5, style="equal")
+classIntervals(grid_sp@data$population, n=5, style="quantile")
+set.seed(1)
+classIntervals(grid_sp@data$population, n=5, style="kmeans")
+set.seed(1)

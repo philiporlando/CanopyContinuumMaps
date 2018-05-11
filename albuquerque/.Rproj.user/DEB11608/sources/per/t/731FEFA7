@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1523440799653.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3292845596",
+    "id" : "731FEFA7",
+    "lastKnownWriteTime" : 1523479979,
+    "last_content_update" : 1523479979572,
+    "path" : "~/Desktop/2018-04-06-CanopyContinuumMaps/albuquerque/src/2018-04-11-albuquerqueMap_sp_sf_Postgres.R",
+    "project_path" : "src/2018-04-11-albuquerqueMap_sp_sf_Postgres.R",
+    "properties" : {
+        "cursorPosition" : "404,0",
+        "scrollLine" : "387",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

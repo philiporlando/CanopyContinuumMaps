@@ -1,0 +1,9 @@
+{
+    "path" : "~/Desktop/2018-04-06-CanopyContinuumMaps/albuquerque/data/airnow",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

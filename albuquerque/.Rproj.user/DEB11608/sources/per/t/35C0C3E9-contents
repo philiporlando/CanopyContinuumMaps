@@ -1,0 +1,181 @@
+## Canopy Continuum, Seasonal Variation of Urban Air Quality in Six Cities
+## Created by Philip Orlando @ Sustainable Atmospheres Research Lab
+## 2017-12-01
+
+## import dependencies:
+if (!require(plyr)){
+  install.packages('plyr')
+  library(plyr)
+}
+
+
+if (!require(dplyr)){
+  install.packages('dplyr')
+  library(dplyr)
+}
+
+
+if (!require(stringr)){
+  install.packages('stringr')
+  library(stringr)
+}
+
+
+
+if (!require(openair)){
+  install.packages('openair')
+  library(openair)
+}
+
+if (!require(ggplot2)){
+  install.packages('ggplot2')
+  library(ggplot2)
+}
+
+if (!require(reshape2)){
+  install.packages('reshape2')
+  library(reshape2)
+}
+
+if (!require(tidyverse)){
+  install.packages('tidyverse')
+  library(tidyverse)
+}
+
+if (!require(rgdal)){
+  install.packages('rgdal')
+  library(rgdal)
+}
+
+if (!require(rgeos)){
+  install.packages('rgeos')
+  library(rgeos)
+}
+
+if (!require(classInt)){
+  install.packages('classInt')
+  library(classInt)
+}
+
+if (!require(RColorBrewer)){
+  install.packages('RColorBrewer')
+  library(RColorBrewer)
+}
+
+if (!require(leaflet)){
+  install.packages('leaflet')
+  library(leaflet)
+}
+
+if (!require(lubridate)){
+  install.packages('lubridate')
+  library(lubridate)
+}
+
+if (!require(stringi)){
+  install.packages('stringi')
+  library(stringi)
+}
+
+
+if (!require(tidyr)){
+  install.packages('tidyr')
+  library(tidyr)
+}
+
+
+## Setting our working directory:
+setwd("F:/2017-11-29-CanopyContinuum-SeasonalVariation/")
+getwd() ## ensure that our working directory was correctly set
+
+## creating read functions for processing the raw data:
+
+## since each file has the same header, we only need to create one read function for this!
+read.airnow.daily <- function(fpath) {
+  x <- read_csv(fpath, 
+                col_types = cols(`1st Max Hour` = col_number(), 
+                                 `1st Max Value` = col_number(), `Arithmetic Mean` = col_number(), 
+                                 `Date of Last Change` = col_date(format = "%Y-%m-%d"), 
+                                 Latitude = col_number(), Longitude = col_number(), 
+                                 `Method Code` = col_character(), 
+                                 `Observation Count` = col_character(), 
+                                 `Observation Percent` = col_character(), 
+                                 POC = col_character(), `Parameter Code` = col_character()))
+  
+  x$month <- format(x$`Date Local`, "%m")
+  
+  ## create a season variable based on the extraced month:
+  x$season <- ifelse(x$month < "03" & x$month >= "01" | x$month == "12", "Winter",
+                     ifelse(x$month >= "03" & x$month < "06", "Spring",
+                            ifelse(x$month >= "06" & x$month < "09", "Summer",
+                                   ifelse(x$month >= "09" & x$month < "12", "Autumn",
+                                          "Other"))))
+  return(x)
+  }
+
+## fpath <- "./EPA_AirNowData/CarbonMonoxide/daily_42101_2013.csv"
+## test <- read.airnow.daily(fpath)
+
+## create path variables for each pollutant directory:
+co.path.daily <- "./EPA_AirNowData/CarbonMonoxide/"
+no2.path.daily <- "./EPA_AirNowData/NitrogenDioxide/"
+pm25.path.daily <- "./EPA_AirNowData/FineParticulateMatter/"
+pm10.path.daily <- "./EPA_AirNowData/CoarseParticulateMatter/"
+o3.path.daily <- "./EPA_AirNowData/Ozone/"
+
+## create of list files per each directory:
+co_files_daily <- list.files(path = co.path.daily, pattern = "\\.csv$",
+                       all.files=FALSE, full.names = TRUE,
+                       ignore.case = FALSE)
+
+no2_files_daily <- list.files(path = no2.path.daily, pattern = "\\.csv$",
+                        all.files=FALSE, full.names = TRUE,
+                        ignore.case = FALSE)
+
+pm25_files_daily <- list.files(path = pm25.path.daily, pattern = "\\.csv$",
+                         all.files=FALSE, full.names = TRUE,
+                         ignore.case = FALSE)
+
+pm10_files_daily <- list.files(path = pm10.path.daily, pattern = "\\.csv$",
+                         all.files=FALSE, full.names = TRUE,
+                         ignore.case = FALSE)
+
+o3_files_daily <- list.files(path = o3.path.daily, pattern = "\\.csv$",
+                               all.files=FALSE, full.names = TRUE,
+                               ignore.case = FALSE)
+
+## create master files for each pollutant:
+co_master_daily <- ldply(co_files_daily, read.airnow.daily)
+no2_master_daily <- ldply(no2_files_daily, read.airnow.daily)
+pm25_master_daily <- ldply(pm25_files_daily, read.airnow.daily)
+pm10_master_daily <- ldply(pm10_files_daily, read.airnow.daily)
+o3_master_daily <- ldply(o3_files_daily, read.airnow.daily)
+
+## bind rows to form one master file:
+master_daily <- bind_rows(co_master_daily, no2_master_daily, pm25_master_daily, pm10_master_daily, o3_master_daily)
+
+## Visually inspect data for each county of interest:
+head(subset(master_daily, `County Name` == "Multnomah"))
+head(subset(master_daily, `County Name` == "Pierce"))
+head(subset(master_daily, `County Name` == "Ada"))
+head(subset(master_daily, `County Name` == "Sacramento"))
+head(subset(master_daily, `County Name` == "Salt Lake"))
+head(subset(master_daily, `County Name` == "Bernalillo"))
+
+
+## create a subset of just these six cites:
+six_city_daily <- subset(master_daily,
+                     `County Name` == "Ada" |
+                     `County Name` == "Bernalillo" |
+                     `County Name` == "Multnomah" |
+                     `County Name` == "Pierce" |
+                     `County Name` == "Sacramento" |
+                     `County Name` == "Salt Lake" )
+
+## ensure that each county has made the list:
+unique(six_city_daily$`County Name`)
+str(six_city_daily)
+
+## write this dataframe to a csv file:
+write.csv(six_city_daily, paste0("./SixCityData/", format(format(Sys.time(), "%Y-%m-%d")),"_six_city_daily.csv"), row.names = FALSE)
+
