@@ -80,7 +80,7 @@ sacra_points <- SpatialPointsDataFrame(coords = sacra_coords
 #system('python purpleair_webscrape.py', wait = TRUE) # waits until all data is scraped
 
 # on Linux
-python.load("purpleair_webscrape.py")
+python.load("./purpleair_webscrape.py") # previous version was changing wd to subdir...!
 
 # provide path to existing purpleair directory
 other_pa_path <- ("./data/existing_purple_air/")
@@ -112,7 +112,7 @@ census_api_key(KEY, install = TRUE, overwrite = TRUE)
 readRenviron("~/.Renviron")
 
 # reading in census data
-acs <- get_acs(year = "2016"
+acs <- get_acs(year = 2016 # unquote on linux
                ,geography = "block group" 
                ,variables = "B00001_001E" # unweighted total population
                ,state = "CA"
@@ -971,7 +971,7 @@ addPolygons(data = grid_sample2
             )
 ) %>% 
   
-  hideGroup("Target Grid Cells") %>%
+  ## hideGroup("Target Grid Cells") %>%
   
   
   # pull in regional monitoring sites
