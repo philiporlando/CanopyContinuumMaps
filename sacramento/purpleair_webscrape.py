@@ -19,15 +19,16 @@ start_day = datetime.fromtimestamp(t_start).strftime("%Y-%m-%d")
 #file_name = str(start_day) + "_online_purpleair_sensors.txt"
 file_name = "existing_purple_air.txt"
 dir_name = "/data/existing_purple_air"
-full_path = os.getcwd() + "//" + dir_name
+full_path = os.getcwd() + "//" + dir_name + "//" + file_name
+
 
 d = datetime.utcnow()
 unixtime = calendar.timegm(d.utctimetuple())
 
-if not os.path.isdir(full_path):
-	os.mkdir(full_path)
+#if not os.path.isfile(full_path):
+#	os.mkdir(full_path)
 
-os.chdir(full_path)
+#os.chdir(full_path)
 
 df = pd.DataFrame(columns=['datetime', 'site_id', 'site_name', 'lat', 'lon'])
 
@@ -68,7 +69,7 @@ try:
 			df.loc[row] = pd.Series(dict(datetime = datetime.fromtimestamp(sensor['LastSeen']), site_id = sensor['ID'],site_name = sensor['Label'], lat = sensor['Lat'], lon = sensor['Lon']))
 			print df.loc[[row]]
 			row += 1
-			df.to_csv(file_name, sep = ',', index = False, encoding = 'utf-8')
+			df.to_csv(full_path, sep = ',', index = False, encoding = 'utf-8')
 
 except Exception as e:
 	print '[*] Error, no data was written to file'
