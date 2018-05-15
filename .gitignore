@@ -5,3 +5,4 @@
 ./albuquerque/.RData
 ./sacramento/.RData
 ./sacramento/data/tigerline/tl_2017_us_uac10.shp
+**/*.Rproj.user*
