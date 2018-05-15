@@ -19,7 +19,7 @@ p_load(readr
        ,rgeos
        ,rgdal
        ,sp
-       ,leaflet
+       #,leaflet
        ,sf
        ,raster
        ,mapview
@@ -32,7 +32,10 @@ p_load(readr
        ,scales
        ,htmlwidgets
        ,rPython
+       ,devtools
 )
+
+devtools::install_github('rstudio/leaflet', force = TRUE)
 
 # geography projection
 wgs_84 <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
@@ -942,34 +945,34 @@ m3 = leaflet() %>%
 #             )
 # ) %>%
 
-# add grid cells from our sample id list
-addPolygons(data = grid_sample2
-            ,color = "black"
-            ,fillColor = colcode2
-            #,fillColor = NULL
-            ,fillOpacity = 0.00001
-            ,weight = 2.5
-            ,opacity = 1
-            #,popup = pop1
-            # interaction
-            ,group = "Target Grid Cells"
-            ,highlight = highlightOptions(
-              weight = 5
-              ,color = "#666"
-              #,color = NULL
-              ,dashArray = ""
-              ,fillOpacity = 0.000001
-              #,bringToFront = TRUE
-            )
-            ,label = labels3
-            ,labelOptions = labelOptions(
-              style = list("font-weight" = "normal"
-                           ,padding = "3px 8px"
+  # add grid cells from our sample id list
+  addPolygons(data = grid_sample2
+              ,color = "black"
+              ,fillColor = colcode2
+              #,fillColor = NULL
+              ,fillOpacity = 0.00001
+              ,weight = 2.5
+              ,opacity = 1
+              #,popup = pop1
+              # interaction
+              ,group = "Target Grid Cells"
+              ,highlight = highlightOptions(
+                weight = 5
+                ,color = "#666"
+                #,color = NULL
+                ,dashArray = ""
+                ,fillOpacity = 0.000001
+                #,bringToFront = TRUE
               )
-              ,textsize = "15px"
-              ,direction = "auto"
-            )
-) %>% 
+              ,label = labels3
+              ,labelOptions = labelOptions(
+                style = list("font-weight" = "normal"
+                             ,padding = "3px 8px"
+                )
+                ,textsize = "15px"
+                ,direction = "auto"
+              )
+  ) %>% 
   
   ## hideGroup("Target Grid Cells") %>%
   
@@ -1039,3 +1042,4 @@ addPolygons(data = grid_sample2
 
 
 m3
+
