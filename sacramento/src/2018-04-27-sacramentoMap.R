@@ -19,7 +19,7 @@ p_load(readr
        ,rgeos
        ,rgdal
        ,sp
-       #,leaflet
+       ,leaflet
        ,sf
        ,raster
        ,mapview
@@ -35,7 +35,8 @@ p_load(readr
        ,devtools
 )
 
-devtools::install_github('rstudio/leaflet', force = TRUE)
+# this made no difference...
+#devtools::install_github('rstudio/leaflet', force = TRUE)
 
 # geography projection
 wgs_84 <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs "
