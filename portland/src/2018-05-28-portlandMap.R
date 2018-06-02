@@ -324,7 +324,8 @@ labels <- sprintf(
 
 m1 <- leaflet() %>%
   
-  addTiles('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png') %>%
+  #addTiles('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png') %>%
+  addTiles() %>%
   
   addPolygons(data = grid_sp
               ,color = "black"
@@ -349,7 +350,8 @@ m1 <- leaflet() %>%
                 ,direction = "auto"
               )
   ) %>%
-  
+  addScaleBar()
+
   # addLegend(position = c("bottomright")
   #           ,colors = plotclr
   #           ,labels = c(as.character(class$brks))
@@ -357,7 +359,6 @@ m1 <- leaflet() %>%
   #           ,title = "Population Density"
   #           ) %>%
   
-  addScaleBar()
 # addLabelOnlyMarkers(lng = ~ x, lat = ~ y, data = crd
 #                     , label = as.character(p@data$id)
 #                     , labelOptions = labelOptions(noHide = TRUE
@@ -608,26 +609,26 @@ sample_id <- c(sample_10
 grid_sample <- grid_sp[grid_sp@data$id %in% sample_id, ]
 
 #manually adjusting for adjacency (throwing our stratified random sampling out the window...)
-sample_id_adj <- data.frame(sample_id) # need to convert to dataframe to use legacy code from AirAdvice days...
-sample_id_adj$sample_id <- ifelse(sample_id_adj$sample_id == "229", "228"
-                                  ,ifelse(sample_id_adj$sample_id == "414", "385"
-                                          ,ifelse(sample_id_adj$sample_id == "477", "508"
-                                                  ,ifelse(sample_id_adj$sample_id == "625", "536"
-                                                          ,ifelse(sample_id_adj$sample_id == "658", "719"
-                                                                  ,ifelse(sample_id_adj$sample_id == "453", "421"
-                                                                          ,ifelse(sample_id_adj$sample_id == "533", "502"
-                                                                                  ,sample_id_adj$sample_id)
-                                                                  )
-                                                          )
-                                                  )
-                                          )
-                                  )
-                                  
-)
+# sample_id_adj <- data.frame(sample_id) # need to convert to dataframe to use legacy code from AirAdvice days...
+# sample_id_adj$sample_id <- ifelse(sample_id_adj$sample_id == "229", "228"
+#                                   ,ifelse(sample_id_adj$sample_id == "414", "385"
+#                                           ,ifelse(sample_id_adj$sample_id == "477", "508"
+#                                                   ,ifelse(sample_id_adj$sample_id == "625", "536"
+#                                                           ,ifelse(sample_id_adj$sample_id == "658", "719"
+#                                                                   ,ifelse(sample_id_adj$sample_id == "453", "421"
+#                                                                           ,ifelse(sample_id_adj$sample_id == "533", "502"
+#                                                                                   ,sample_id_adj$sample_id)
+#                                                                   )
+#                                                           )
+#                                                   )
+#                                           )
+#                                   )
+#                                   
+# )
 
 
 # create a second layer of grid cells that are not adjacent (only by corners, not sides)
-grid_sample2 <- grid_sp[grid_sp@data$id %in% sample_id_adj$sample_id, ]
+#grid_sample2 <- grid_sp[grid_sp@data$id %in% sample_id_adj$sample_id, ]
 #grid_sample2 <- grid_sample
 
 
@@ -688,13 +689,13 @@ colcode2 <- findColours(class2
 
 
 # population density and cell id label (target cells)
-labels3 <- sprintf(
-  "<strong>ID: %s</strong><br/> Population Density: %s km<sup>-2</sup>"
-  ,grid_sample2@data$id
-  ,comma(round(grid_sample2@data$population, 0)
-  )
-) %>% 
-  lapply(HTML)
+# labels3 <- sprintf(
+#   "<strong>ID: %s</strong><br/> Population Density: %s km<sup>-2</sup>"
+#   ,grid_sample2@data$id
+#   ,comma(round(grid_sample2@data$population, 0)
+#   )
+# ) %>% 
+#   lapply(HTML)
 
 
 # labels for EPA AirData sites
@@ -800,36 +801,36 @@ m2 = leaflet() %>%
               )
   ) %>%
   
-  # add grid cells from our sample id list
-  addPolygons(data = grid_sample2
-              ,color = "black"
-              ,fillColor = colcode2
-              #,fillColor = NULL
-              ,fillOpacity = 0.00001
-              ,weight = 2.5
-              ,opacity = 1
-              #,popup = pop1
-              # interaction
-              ,group = "Target Grid Cells Adjusted"
-              ,highlight = highlightOptions(
-                weight = 5
-                ,color = "#666"
-                #,color = NULL
-                ,dashArray = ""
-                ,fillOpacity = 0.000001
-                #,bringToFront = TRUE
-              )
-              ,label = labels3
-              ,labelOptions = labelOptions(
-                style = list("font-weight" = "normal"
-                             ,padding = "3px 8px"
-                )
-                ,textsize = "15px"
-                ,direction = "auto"
-              )
-  ) %>% 
+  # # add grid cells from our sample id list
+  # addPolygons(data = grid_sample2
+  #             ,color = "black"
+  #             ,fillColor = colcode2
+  #             #,fillColor = NULL
+  #             ,fillOpacity = 0.00001
+  #             ,weight = 2.5
+  #             ,opacity = 1
+  #             #,popup = pop1
+  #             # interaction
+  #             ,group = "Target Grid Cells Adjusted"
+  #             ,highlight = highlightOptions(
+  #               weight = 5
+  #               ,color = "#666"
+  #               #,color = NULL
+  #               ,dashArray = ""
+  #               ,fillOpacity = 0.000001
+  #               #,bringToFront = TRUE
+  #             )
+  #             ,label = labels3
+  #             ,labelOptions = labelOptions(
+  #               style = list("font-weight" = "normal"
+  #                            ,padding = "3px 8px"
+  #               )
+  #               ,textsize = "15px"
+  #               ,direction = "auto"
+  #             )
+  # ) %>% 
   
-  hideGroup(c("Target Grid Cells", "Target Grid Cells Adjusted")) %>%
+  # hideGroup(c("Target Grid Cells", "Target Grid Cells Adjusted")) %>%
   
   
   # pull in regional monitoring sites
@@ -874,7 +875,7 @@ m2 = leaflet() %>%
     )
     ,overlayGroups = c("Total Grid Cells"
                        ,"Target Grid Cells"
-                       ,"Target Grid Cells Adjusted"
+                       #,"Target Grid Cells Adjusted"
                        ,"Regional Monitoring Sites"
                        ,"Existing PurpleAir"
     )
